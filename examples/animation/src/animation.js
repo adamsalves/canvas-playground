@@ -1,41 +1,37 @@
-(function(doc, win) {
-  'use strict';
-  function Animation(context) {
-    this.context = context;
-    this.sprites = [];
+function Animation(context) {
+  this.context = context;
+  this.sprites = [];
+  this.set = false;
+}
+Animation.prototype = {
+  newSprite: function(sprite) {
+    this.sprites.push(sprite);
+  },
+  turnOn: function() {
+    this.set = true;
+    this.nextFrame();
+  },
+  disconnected: function() {
     this.set = false;
-  }
-  Animation.prototype = {
-    newSprite: function(sprite) {
-      this.sprites.push(sprite);
-    },
-    set: function() {
-      this.set = true;
-      this.nextFrame();
-    },
-    disconnected: function() {
-      this.set = false;
-    },
-    nextFrame: function() {
-      if( ! this.set ) return;
+  },
+  nextFrame: function() {
+    if( ! this.set ) return;
 
-      this.limparTela();
+    this.clearScreeen();
 
-      for (var i in this.sprites) {
-        this.sprites[i].update()
-      }
-      for (var i in this.sprites) {
-        this.sprites[i].draw();
-      }
-      var animation = this;
-      requestAnimationFrame(function() {
-        animation.nextFrame();
-      });
-    },
-    limparTela: function() {
-      var context = this.context;
-      ctx.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    for (var i in this.sprites) {
+      this.sprites[i].update()
     }
-  };
-
-})(document, window);
+    for (var i in this.sprites) {
+      this.sprites[i].draw();
+    }
+    var animation = this;
+    requestAnimationFrame(function() {
+      animation.nextFrame();
+    });
+  },
+  clearScreeen: function() {
+    var context = this.context;
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+  }
+};
